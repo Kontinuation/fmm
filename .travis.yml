@@ -4,7 +4,7 @@ sudo: required
 jobs:
   include:
     - os: linux
-      dist: xenial
+      dist: bionic
     - os: osx
       osx_image: xcode11
     - sudo: required
@@ -29,10 +29,11 @@ script: |
     stmatch
     ubodt_gen
     cd ../example/python
-    which python
-    python fmm_test.py
+    which python3
+    python3 fmm_test.py
   fi
 branches:
   only:
   - master
   - osm
+  - ci_python3

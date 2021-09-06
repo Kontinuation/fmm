@@ -7,8 +7,8 @@ else()
   message(FATAL_ERROR "Swig not found!\n")
 endif()
 
-find_package(PythonInterp REQUIRED)
-find_package(PythonLibs REQUIRED)
+find_package(PythonInterp 3 REQUIRED)
+find_package(PythonLibs 3 REQUIRED)
 if (PYTHONLIBS_FOUND)
   message(STATUS "Python header found at ${PYTHON_INCLUDE_DIRS}")
   message(STATUS "Python library found at ${PYTHON_LIBRARIES}")
@@ -18,7 +18,7 @@ else()
 endif()
 
 execute_process(
-  COMMAND python -c "from setup import get_wheel_name;print(get_wheel_name())"
+  COMMAND ${PYTHON_EXECUTABLE} -c "from setup import get_wheel_name;print(get_wheel_name())"
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
   OUTPUT_VARIABLE WHEEL_NAME OUTPUT_STRIP_TRAILING_WHITESPACE)
 
@@ -40,7 +40,7 @@ if (${CMAKE_VERSION} VERSION_LESS 3.13.0)
     ${CMAKE_CURRENT_BINARY_DIR}/setup.py
     ${CMAKE_CURRENT_BINARY_DIR}/_version.py
     ${CMAKE_CURRENT_BINARY_DIR}/__init__.py
-    COMMAND python setup.py bdist_wheel
+    COMMAND ${PYTHON_EXECUTABLE} setup.py bdist_wheel
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     COMMENT "Building wheel")
 else()
@@ -55,9 +55,9 @@ else()
     ${CMAKE_CURRENT_BINARY_DIR}/setup.py
     ${CMAKE_CURRENT_BINARY_DIR}/_version.py
     ${CMAKE_CURRENT_BINARY_DIR}/__init__.py
-    COMMAND python setup.py bdist_wheel
+    COMMAND ${PYTHON_EXECUTABLE} setup.py bdist_wheel
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     COMMENT "Building wheel")
 endif()
 
-install(CODE "execute_process(COMMAND python -m pip install --force-reinstall ${CMAKE_CURRENT_BINARY_DIR}/dist/${WHEEL_NAME})")
+install(CODE "execute_process(COMMAND ${PYTHON_EXECUTABLE} -m pip install --force-reinstall ${CMAKE_CURRENT_BINARY_DIR}/dist/${WHEEL_NAME})")
